@@ -1,0 +1,142 @@
+extend schema
+  @link(url: "https://grafbase.com/extensions/grpc/0.1.0", import: ["@protoServices", "@protoEnums", "@protoMessages", "@grpcMethod"])
+  @protoServices(
+    definitions: [
+      {
+        name: "orders.OrdersPricingService"
+        methods: [
+          {
+            name: "GetOrder"
+            inputType: ".orders.GetOrderRequest"
+            outputType: ".orders.GetOrderResponse"
+          }
+          {
+            name: "GetPrice"
+            inputType: ".orders.GetPriceRequest"
+            outputType: ".orders.GetPriceResponse"
+          }
+        ]
+      }
+    ]
+  )
+  @protoMessages(
+    definitions: [
+      {
+        name: ".orders.GetOrderRequest"
+        fields: [
+          {
+            name: "order_id"
+            number: 1
+            repeated: false
+            type: "string"
+          }
+        ]
+      }
+      {
+        name: ".orders.LineItem"
+        fields: [
+          {
+            name: "sku"
+            number: 1
+            repeated: false
+            type: "string"
+          }
+          {
+            name: "qty"
+            number: 2
+            repeated: false
+            type: "uint32"
+          }
+          {
+            name: "price"
+            number: 3
+            repeated: false
+            type: "double"
+          }
+        ]
+      }
+      {
+        name: ".orders.GetOrderResponse"
+        fields: [
+          {
+            name: "order_id"
+            number: 1
+            repeated: false
+            type: "string"
+          }
+          {
+            name: "items"
+            number: 2
+            repeated: true
+            type: ".orders.LineItem"
+          }
+        ]
+      }
+      {
+        name: ".orders.GetPriceRequest"
+        fields: [
+          {
+            name: "order_id"
+            number: 1
+            repeated: false
+            type: "string"
+          }
+        ]
+      }
+      {
+        name: ".orders.GetPriceResponse"
+        fields: [
+          {
+            name: "order_id"
+            number: 1
+            repeated: false
+            type: "string"
+          }
+          {
+            name: "total_price"
+            number: 2
+            repeated: false
+            type: "double"
+          }
+        ]
+      }
+    ]
+  )
+
+type Mutation {
+"""
+Returns the full order (line items, quantities, etc.)
+"""
+  orders_OrdersPricingService_GetOrder(input: orders_GetOrderRequestInput): orders_GetOrderResponse @grpcMethod(service: "orders.OrdersPricingService", method: "GetOrder")
+"""
+Returns the total price for a given order
+"""
+  orders_OrdersPricingService_GetPrice(input: orders_GetPriceRequestInput): orders_GetPriceResponse @grpcMethod(service: "orders.OrdersPricingService", method: "GetPrice")
+}
+
+"64 bit signed integer" scalar I64
+"64 bit unsigned integer" scalar U64
+
+input orders_GetOrderRequestInput {
+  order_id: String
+}
+
+input orders_GetPriceRequestInput {
+  order_id: String
+}
+
+type orders_LineItem {
+  sku: String
+  qty: Int
+  price: Float
+}
+
+type orders_GetOrderResponse {
+  order_id: String
+  items: [orders_LineItem!]
+}
+
+type orders_GetPriceResponse {
+  order_id: String
+  total_price: Float
+}

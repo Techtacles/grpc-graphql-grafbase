@@ -1,0 +1,9 @@
+[extensions.grpc]
+version = "0.1"
+
+[[extensions.grpc.config.services]]
+name = "orders.OrdersPricingService"
+address = "http://localhost:50051"
+
+[subgraphs.routeguide]
+schema_path = "./schema.graphql"
