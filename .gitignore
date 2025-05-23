@@ -3,3 +3,5 @@ __pycache__
 virtual
 protoc-gen-grafbase-subgraph
 test.note
+grafbase_extensions
+grafbase_extensions.lock
